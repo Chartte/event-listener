@@ -1,0 +1,16 @@
+# 忽略所有 .log 文件
+#*.log
+
+# 忽略名为 temp 的目录
+#temp/
+
+# 忽略某个特定的文件
+#secret_config.yaml
+
+# 忽略所有 .env 文件
+#*.env
+
+# 忽略所有 node_modules 目录
+#node_modules/
+
+event-listener

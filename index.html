@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event List</title>
+    <script>
+        // 获取事件列表
+        function fetchEvents() {
+            fetch('/events')
+                .then(response => response.json())
+                .then(events => {
+                    const eventList = document.getElementById('eventList');
+                    eventList.innerHTML = '';  // 清空列表
+
+                    // 遍历每个事件并显示
+                    events.forEach(event => {
+                        const eventItem = document.createElement('div');
+                        eventItem.className = 'event-item';
+                        const reviewButton = event.isReviewed
+                            ? `<button disabled>该事件已审核</button>`  // 已审核禁用按钮
+                            : `<button onclick="approveEvent('${event.name}')">审核</button>`;  // 未审核按钮
+
+                        eventItem.innerHTML = `
+                            <strong>Event Name:</strong> ${event.name} <br>
+                            <strong>Reason:</strong> ${event.reason} <br>
+                            <strong>Message:</strong> ${event.message} <br>
+                            <strong>Reviewed:</strong> ${event.isReviewed ? 'Yes' : 'No'} <br>
+                            ${reviewButton}
+                            <hr>
+                        `;
+                        eventList.appendChild(eventItem);
+                    });
+                })
+                .catch(error => console.error('Error fetching events:', error));
+        }
+
+        // 发送审核请求
+        function approveEvent(eventName) {
+            fetch(`/approve?eventName=${eventName}`, { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        alert(`Event ${eventName} has been reviewed.`);
+                        fetchEvents();  // 审核后重新获取事件列表
+                    } else {
+                        alert('Failed to review event.');
+                    }
+                })
+                .catch(error => console.error('Error approving event:', error));
+        }
+
+        // 页面加载时获取事件列表
+        window.onload = fetchEvents;
+    </script>
+</head>
+<body>
+<h1>Event List</h1>
+<div id="eventList"></div>
+</body>
+</html>
