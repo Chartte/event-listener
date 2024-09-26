@@ -15,3 +15,6 @@
 
 event-listener
 event-listener.tar.gz
+README.md
+event-listener.yaml
+Makefile
